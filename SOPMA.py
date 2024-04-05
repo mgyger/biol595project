@@ -46,7 +46,7 @@ def run_sopma(sequence):
 
             # Check if request was successful
             if response.status_code == 200:
-                # Use regular expressions to extract secondary structure composition
+                # use regular expressions to extract secondary structure composition
                 match = re.search(r'Alpha helix.*?(\d+).*?(\d+\.\d+)%.*?3_10 helix.*?(\d+).*?(\d+\.\d+)%.*?Pi helix.*?(\d+).*?(\d+\.\d+)%.*?Beta bridge.*?(\d+).*?(\d+\.\d+)%.*?Extended strand.*?(\d+).*?(\d+\.\d+)%.*?Beta turn.*?(\d+).*?(\d+\.\d+)%.*?Bend region.*?(\d+).*?(\d+\.\d+)%.*?Random coil.*?(\d+).*?(\d+\.\d+)%', response.text)
 
                 # Check if match was found
