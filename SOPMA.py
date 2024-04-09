@@ -73,10 +73,11 @@ def extract_secondary_structure(html_content):
             total_chars += 1
 
     # Calculate and print the ratio of each letter's proportion
-    for char, count in counts.items():
-        ratio = (count / total_chars) * 100
-        structure_name = structure_names[char]
-        print(f"{structure_name}: {count} is {ratio:.2f}%")
+    with open('sopma_result.txt', 'w') as file:
+        for char, count in counts.items():
+            ratio = (count / total_chars) * 100
+            structure_name = structure_names[char]
+            file.write(f"{structure_name}: {count} is {ratio:.2f}%\n")
 
 # Example usage
 sequence = "MTEITAAMVKELRESTGAGMMDCKNALSETNGDFDKAVQLLREKGLGKAAKKADRLAAEG"
