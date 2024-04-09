@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 
 def run_sopma(sequence):
-    # Define the SOPMA URL
+    # define the SOPMA URL
     base_url = "https://npsa.lyon.inserm.fr/cgi-bin/npsa_automat.pl?page=/NPSA/npsa_sopma.html"
 
     # Make a POST request to fetch the SOPMA page
