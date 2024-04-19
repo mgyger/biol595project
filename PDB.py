@@ -6,68 +6,104 @@ Morgan Gyger 15 04 2024
 ---------------------------------------------------------------------------------------------------------------------"""
 
 import requests
+import json
 import py3Dmol
 
-def send_query(query_structure):
-    api_endpoint = "https://search.rcsb.org/rcsbsearch/v2/query"
-    response = requests.post(api_endpoint, json=query_structure)
+
+def predict_protein_structure(sequence):
+    api_url = "https://www.predictprotein.org/api/v2/"
+    endpoint = "predict/proteinstructure"
+
+    # Request payload
+    data = {
+        "input_data": {
+            "sequence": sequence,
+            "format": "single_sequence",
+            "submit": "Predict"
+        }
+    }
+
+    # Send POST request
+    response = requests.post(f"{api_url}{endpoint}", json=data)
+
     if response.status_code == 200:
-        return response.json()
+        result = response.json()
+        if result.get("result"):
+            return result["result"]
+        else:
+            print("Error in prediction:", result.get("message", "Unknown error"))
+            return None
     else:
-        print("Error:", response.text)
+        print("Error:", response.status_code)
         return None
 
-def create_pdb_model(pdb_id):
-    view = py3Dmol.view(width=800, height=400)
-    view.addModel(pdb_file, "pdb")
-    view.setStyle({"cartoon": {'color':'spectrum'}})
-    view.zoomTo()
-    view.show()
 
-def main(fasta_string):
-    # Parse FASTA sequences
-    sequences = fasta_string.strip().split('>')[1:]
+# Read FASTA file and extract the first sequence
+with open("blast_results.txt", "r") as file:
+    fasta_data = file.read().strip().split("\n")
 
-    # Iterate over the first two FASTA sequences
-    for i, sequence in enumerate(sequences[:2], start=1):
-        # Construct query payload based on the provided query structure
-        query_structure = {
-  "query": {
-    "type": "terminal",
-    "service": "text",
-    "parameters": {
-      "attribute": "rcsb_uniprot_protein.name.value",
-      "operator": "exact_match",
-      "value": "Free fatty acid receptor 2"
+# Extract the first sequence
+first_sequence = fasta_data[1]
+
+# Predict protein structure
+predicted_structure = predict_protein_structure(first_sequence)
+
+if predicted_structure:
+    print("Predicted protein structure:")
+    print(json.dumps(predicted_structure, indent=2))
+
+
+def fetch_pdb_ids(sequence):
+    search_url = "https://search.rcsb.org/rcsbsearch/v2/query"
+    query = {
+        "query": {
+            "type": "terminal",
+            "service": "sequence",
+            "parameters": {
+                "evalue_cutoff": 0.001,
+                "identity_cutoff": 95,
+                "target": "pdb_protein_sequence",
+                "value": sequence
+            }
+        },
+        "request_options": {
+            "pager": {
+                "start": 0,
+                "rows": 10
+            },
+            "scoring_strategy": "combined"
+        },
+        "return_type": "entry"
     }
-  },
-  "return_type": "entry",
-  "request_options": {
-    "results_content_type": [
-      "computational",
-      "experimental"
-    ]
-  }
-}
 
-        # Send query to PDB API
-        print(f"Sending query for FASTA sequence {i}:")
-        response_data = send_query(query_structure)
-        if response_data:
-            search_data = response_data.get('data', {}).get('search', {})
-            pdb_ids = [entry['identifier'] for entry in search_data.get('edges', [])]
-            print(f"Matching PDB IDs for FASTA sequence {i}: {pdb_ids}")
-            if pdb_ids:
-                # Create PDB model for the first matching PDB ID
-                print("Creating model for the first matching PDB ID:")
-                create_pdb_model(pdb_ids[0])
-            else:
-                print("No matching PDB IDs found.")
-        else:
-            print("No response data received.")
+    response = requests.post(search_url, json=query)
+    if response.status_code == 200:
+        data = response.json()
+        pdb_ids = [entry["identifier"] for entry in data["result_set"]]
+        return pdb_ids
+    else:
+        print("Error fetching PDB IDs:", response.status_code)
+        return []
 
-# Example FASTA string
-fasta_string = """MSFRFGQHLIKPSVVFLKTELSFALVNRKPVVPGHVLVCPLRPVERFHDLRPDEVADLFQTTQRVGTVVEKHFHGTSLTFSMQDGPEAGQTVKHVHVHVLPRKAGDFHRNDSIYEELQKHDKEDFPASWRSEEEMAAEAAALRVYFQ"""
 
-main(fasta_string)
+# Read FASTA file
+with open("blast_results.txt", "r") as file:
+    fasta_data = file.read().strip().split("\n")
 
+# Extract sequences from FASTA file excluding the first one
+sequences = ["".join(fasta_data[i + 1:]) for i in range(0, len(fasta_data), 2)]
+
+# Fetch PDB IDs for each sequence and print
+for sequence in sequences:
+    pdb_ids = fetch_pdb_ids(sequence)
+    print("PDB IDs for sequence:")
+    print(pdb_ids)
+
+    # Visualize PDB structures using py3Dmol
+    if pdb_ids:
+        viewer = py3Dmol.view(width=800, height=600)
+        for pdb_id in pdb_ids:
+            viewer.addModel(f"https://files.rcsb.org/download/{pdb_id}.pdb", "pdb")
+        viewer.setStyle({"cartoon": {"color": "spectrum"}})
+        viewer.zoomTo()
+        viewer.show()
