@@ -39,7 +39,7 @@ def predict_protein_structure(sequence):
 
 
 # Read FASTA file and extract the first sequence
-with open("blast_results.txt", "r") as file:
+with open("blast_result.txt", "r") as file:
     fasta_data = file.read().strip().split("\n")
 
 # Extract the first sequence
@@ -87,11 +87,11 @@ def fetch_pdb_ids(sequence):
 
 
 # Read FASTA file
-with open("blast_results.txt", "r") as file:
+with open("blast_result.txt", "r") as file:
     fasta_data = file.read().strip().split("\n")
 
-# Extract sequences from FASTA file excluding the first one
-sequences = ["".join(fasta_data[i + 1:]) for i in range(0, len(fasta_data), 2)]
+# Extract sequences from FASTA file including the first one
+sequences = ["".join(fasta_data[i]) for i in range(1, len(fasta_data), 2)]
 
 # Fetch PDB IDs for each sequence and print
 for sequence in sequences:
