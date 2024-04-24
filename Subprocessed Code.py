@@ -1,7 +1,51 @@
 import requests
 from bs4 import BeautifulSoup
 from Bio.Blast import NCBIWWW, NCBIXML
+import sqlite3
+
+# Create SQLite database connection
+conn = sqlite3.connect('output_data.db')
+cursor = conn.cursor()
+
+# Create tables for each class's output
+cursor.execute('''CREATE TABLE IF NOT EXISTS blast_results (
+                    accession_number TEXT,
+                    gene_name TEXT,
+                    accession TEXT,
+                    scientific_name TEXT,
+                    e_score REAL,
+                    alignment_score REAL,
+                    identity REAL,
+                    fasta_sequence TEXT
+                )''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS sopma_results (
+                    accession_number TEXT,
+                    secondary_structure TEXT
+                )''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS deepgo_results (
+                    accession_number TEXT,
+                    category TEXT,
+                    go_id TEXT,
+                    description TEXT,
+                    score REAL
+                )''')
+
+# Commit changes and close connection
+conn.commit()
+conn.close()
 class SOPMA:
+    def write_to_database(self, accession_number, secondary_structure):
+        conn = sqlite3.connect('output_data.db')
+        cursor = conn.cursor()
+
+        # Concatenate the list of secondary structure information into a single string
+        secondary_structure_text = '\n'.join(secondary_structure)
+
+        cursor.execute("INSERT INTO sopma_results VALUES (?, ?)", (accession_number, secondary_structure_text))
+        conn.commit()
+        conn.close()
     def __init__(self):
         self.base_url = "https://npsa.lyon.inserm.fr/cgi-bin/npsa_automat.pl?page=/NPSA/npsa_sopma.html"
 
@@ -40,7 +84,7 @@ class SOPMA:
                 # Extract the secondary structure information
                 secondary_structure_text = self.extract_secondary_structure(response.text)
                 # Call the callback function to handle file writing
-                callback(secondary_structure_text, accession_number)
+                callback(accession_number, secondary_structure_text)  # Pass the correct arguments here
             else:
                 print(f"Error: Failed to retrieve data from SOPMA for {accession_number}")
         else:
@@ -137,7 +181,15 @@ class SOPMA:
                     sequences.append((accession_number, fasta_sequence))
         return sequences
 
-class NCBI_BLAST:
+"""class NCBI_BLAST:
+    def write_to_database(self, gene_name, accession, scientific_name, e_score, alignment_score, identity,
+                          fasta_sequence):
+        conn = sqlite3.connect('output_data.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO blast_results VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                       (gene_name, accession, scientific_name, e_score, alignment_score, identity, fasta_sequence))
+        conn.commit()
+        conn.close()
     def run_ncbi_blast(self, sequence):
         # Perform BLAST search on NCBI
         result_handle = NCBIWWW.qblast("blastn", "nt", sequence)
@@ -189,7 +241,8 @@ class NCBI_BLAST:
                 file.write("Fasta Sequence: " + fasta_sequence + "\n")
                 file.write("\n")
 
-        print("Data written to blast_result.txt.")
+        print("Data written to blast_result.txt.")"""
+
 
 
 
@@ -198,7 +251,7 @@ class DeepGOPredictor:
         self.url = 'https://deepgo.cbrc.kaust.edu.sa/deepgo/api/create'
         self.headers = {'Content-Type': 'application/json'}
 
-    def predict_go_functions(self, sequence, threshold=0.4):
+    def predict_go_functions(self, sequence, accession_number, threshold=0.4):
         data = {
             "version": "1.0.18",
             "data_format": "fasta",  # must be small letters
@@ -214,28 +267,87 @@ class DeepGOPredictor:
             result = response.json()
             predictions = result['predictions'][0]['functions']
 
-            # Print formatted output
-            for category in predictions:
-                print(category['name'])
-                for func in category['functions']:
-                    go_id, description, score = func
-                    print(f"{go_id} - {description} - {round(score, 3)}")
-                print()  # Blank line for visual separation
+            # Filter predictions with score >= 0.5
+            filtered_predictions = [(category['name'], [(go_id, description, round(score, 3)) for go_id, description, score in category['functions'] if score >= 0.5]) for category in predictions]
+
+            # Write to file if there are filtered predictions
+            if any(filtered_predictions):
+                with open('deepgo_result.txt', 'a') as file:
+                    file.write(f"Accession Number: {accession_number}\n")
+                    for category_name, functions in filtered_predictions:
+                        if functions:
+                            file.write(category_name + '\n')
+                            for func in functions:
+                                go_id, description, score = func
+                                file.write(f"{go_id} - {description} - {score}\n")
+                            file.write('\n')
         else:
-            print('Failed to retrieve data:', response.status_code)
+            print(f'Failed to retrieve data for {accession_number}:', response.status_code)
             print(response.text)
 
-    def main(self, sequence):
-        # Predict GO functions for the protein sequence
-        self.predict_go_functions(sequence)
+    def main(self, sequences):
+        for accession_number, fasta_sequence in sequences:
+            amino_acid_sequence = SOPMA().fasta_to_amino_acid(fasta_sequence)
+            print("Accession Number:", accession_number)
+            print("Amino Acid Sequence:", amino_acid_sequence)
+            predictions = self.predict_go_functions(amino_acid_sequence, accession_number)
+            if predictions:
+                self.write_to_database(accession_number, predictions)
+            else:
+                print("No predictions found for accession number:", accession_number)
 
+        print("Data written to deepgo_results table in database.")
+
+    def write_to_database(self, accession_number, predictions):
+        if predictions is not None:  # Add a check for None
+            conn = sqlite3.connect('output_data.db')
+            cursor = conn.cursor()
+            for category_name, functions in predictions:
+                for func in functions:
+                    go_id, description, score = func
+                    cursor.execute("INSERT INTO deepgo_results VALUES (?, ?, ?, ?, ?)",
+                                   (accession_number, category_name, go_id, description, score))
+            conn.commit()
+            conn.close()
+
+    def read_deepgo_results_file(self, filename):
+        results = []
+        with open(filename, 'r') as file:
+            accession_number = None
+            category = None
+            for line in file:
+                line = line.strip()
+                if line.startswith("Accession Number:"):
+                    accession_number = line.split(": ")[1]
+                elif line:
+                    if line.startswith("["):
+                        category = line.strip("[]")
+                    else:
+                        parts = line.split(" - ")
+                        go_id = parts[0]
+                        description = parts[1]
+                        score = float(parts[2])
+                        results.append((accession_number, category, go_id, description, score))
+        return results
+
+    def fill_database_from_file(self, filename):
+        results = self.read_deepgo_results_file(filename)
+        if results:
+            conn = sqlite3.connect('output_data.db')
+            cursor = conn.cursor()
+            cursor.executemany("INSERT INTO deepgo_results VALUES (?, ?, ?, ?, ?)", results)
+            conn.commit()
+            conn.close()
+            print("Data from DeepGO results file written to database.")
+        else:
+            print("No DeepGO results found in the file.")
 
 def main():
-    ncbi_blast = NCBI_BLAST()
-    sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
+    #ncbi_blast = NCBI_BLAST()
+    #sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
 
     # Run NCBI BLAST search and retrieve top 5 results
-    ncbi_blast.main(sequence)
+    #ncbi_blast.main(sequence)
 
     sopma = SOPMA()
     fasta_sequences = sopma.read_sequence_file('blast_result.txt')
@@ -243,11 +355,15 @@ def main():
         amino_acid_sequence = sopma.fasta_to_amino_acid(fasta_sequence)
         print("Accession Number:", accession_number)
         print("Amino Acid Sequence:", amino_acid_sequence)
-        sopma.run_sopma(amino_acid_sequence, accession_number, sopma.write_to_file)
+        sopma.run_sopma(amino_acid_sequence, accession_number, sopma.write_to_database)
 
     predictor = DeepGOPredictor()
-    predictor.main(sequence)  # Use the same sequence for DeepGO prediction
+    predictor.fill_database_from_file('deepgo_result.txt')
+
+    print("Data written to database.")
 
 
 if __name__ == "__main__":
     main()
+
+
