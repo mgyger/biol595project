@@ -12,7 +12,7 @@ import py3Dmol
 
 def predict_protein_structure(sequence):
     api_url = "https://www.predictprotein.org/api/v2/"
-    endpoint = "predict/proteinstructure"
+    endpoint = "predict/protein_structure"
 
     # Request payload
     data = {
@@ -38,20 +38,33 @@ def predict_protein_structure(sequence):
         return None
 
 
-# Read FASTA file and extract the first sequence
+# Read FASTA file and extract
 with open("blast_result.txt", "r") as file:
-    fasta_data = file.read().strip().split("\n")
+    # Read the lines
+    lines = file.readlines()
+
+# Initialize an empty list to store the FASTA sequences
+fasta_sequences = []
+
+# Iterate through each line in the file
+for line in lines:
+    # Check if the line contains "Fasta Sequence:"
+    if "Fasta Sequence:" in line:
+        # Extract the FASTA sequence after "Fasta Sequence:"
+        fasta_sequence = line.split("Fasta Sequence:")[1].strip()
+        # Append the sequence to the list
+        fasta_sequences.append(fasta_sequence)
 
 # Extract the first sequence
-first_sequence = fasta_data[1]
+## first_sequence = fasta_data[1]
 
 # Predict protein structure
-predicted_structure = predict_protein_structure(first_sequence)
+predicted_structure = predict_protein_structure(fasta_sequences)
 
-if predicted_structure:
-    print("Predicted protein structure:")
-    print(json.dumps(predicted_structure, indent=2))
-
+for i in fasta_sequences:
+    if predicted_structure:
+        print("Predicted protein structure:")
+        print(json.dumps(predicted_structure, indent=2))
 
 def fetch_pdb_ids(sequence):
     search_url = "https://search.rcsb.org/rcsbsearch/v2/query"
