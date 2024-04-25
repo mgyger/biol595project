@@ -9,7 +9,6 @@ cursor = conn.cursor()
 
 # Create tables for each class's output
 cursor.execute('''CREATE TABLE IF NOT EXISTS blast_results (
-                    accession_number TEXT,
                     gene_name TEXT,
                     accession TEXT,
                     scientific_name TEXT,
@@ -35,6 +34,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS deepgo_results (
 # Commit changes and close connection
 conn.commit()
 conn.close()
+
 class SOPMA:
     def write_to_database(self, accession_number, secondary_structure):
         conn = sqlite3.connect('output_data.db')
@@ -46,6 +46,7 @@ class SOPMA:
         cursor.execute("INSERT INTO sopma_results VALUES (?, ?)", (accession_number, secondary_structure_text))
         conn.commit()
         conn.close()
+
     def __init__(self):
         self.base_url = "https://npsa.lyon.inserm.fr/cgi-bin/npsa_automat.pl?page=/NPSA/npsa_sopma.html"
 
@@ -181,13 +182,14 @@ class SOPMA:
                     sequences.append((accession_number, fasta_sequence))
         return sequences
 
-"""class NCBI_BLAST:
-    def write_to_database(self, gene_name, accession, scientific_name, e_score, alignment_score, identity,
-                          fasta_sequence):
+class NCBI_BLAST:
+    def write_to_database(self, top_results):
         conn = sqlite3.connect('output_data.db')
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO blast_results VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                       (gene_name, accession, scientific_name, e_score, alignment_score, identity, fasta_sequence))
+        for result in top_results:
+            gene_name, accession, scientific_name, e_score, alignment_score, identity, fasta_sequence = result
+            cursor.execute("INSERT INTO blast_results VALUES (?, ?, ?, ?, ?, ?, ?)",
+                           (gene_name, accession, scientific_name, e_score, alignment_score, identity, fasta_sequence))
         conn.commit()
         conn.close()
     def run_ncbi_blast(self, sequence):
@@ -222,6 +224,9 @@ class SOPMA:
         # Run NCBI BLAST search and retrieve top 5 results
         top_results = self.run_ncbi_blast(sequence)
 
+        # Write BLAST results to the database
+        self.write_to_database(top_results)
+
         # Write data to a text file
         with open("blast_result.txt", "w") as file:
             # Write user input sequence at the top
@@ -241,9 +246,7 @@ class SOPMA:
                 file.write("Fasta Sequence: " + fasta_sequence + "\n")
                 file.write("\n")
 
-        print("Data written to blast_result.txt.")"""
-
-
+        print("Data written to blast_result.txt.")
 
 
 class DeepGOPredictor:
@@ -281,9 +284,11 @@ class DeepGOPredictor:
                                 go_id, description, score = func
                                 file.write(f"{go_id} - {description} - {score}\n")
                             file.write('\n')
+            return filtered_predictions
         else:
             print(f'Failed to retrieve data for {accession_number}:', response.status_code)
             print(response.text)
+            return None
 
     def main(self, sequences):
         for accession_number, fasta_sequence in sequences:
@@ -303,51 +308,18 @@ class DeepGOPredictor:
             conn = sqlite3.connect('output_data.db')
             cursor = conn.cursor()
             for category_name, functions in predictions:
-                for func in functions:
-                    go_id, description, score = func
+                for go_id, description, score in functions:
                     cursor.execute("INSERT INTO deepgo_results VALUES (?, ?, ?, ?, ?)",
                                    (accession_number, category_name, go_id, description, score))
             conn.commit()
             conn.close()
 
-    def read_deepgo_results_file(self, filename):
-        results = []
-        with open(filename, 'r') as file:
-            accession_number = None
-            category = None
-            for line in file:
-                line = line.strip()
-                if line.startswith("Accession Number:"):
-                    accession_number = line.split(": ")[1]
-                elif line:
-                    if line.startswith("["):
-                        category = line.strip("[]")
-                    else:
-                        parts = line.split(" - ")
-                        go_id = parts[0]
-                        description = parts[1]
-                        score = float(parts[2])
-                        results.append((accession_number, category, go_id, description, score))
-        return results
-
-    def fill_database_from_file(self, filename):
-        results = self.read_deepgo_results_file(filename)
-        if results:
-            conn = sqlite3.connect('output_data.db')
-            cursor = conn.cursor()
-            cursor.executemany("INSERT INTO deepgo_results VALUES (?, ?, ?, ?, ?)", results)
-            conn.commit()
-            conn.close()
-            print("Data from DeepGO results file written to database.")
-        else:
-            print("No DeepGO results found in the file.")
-
 def main():
-    #ncbi_blast = NCBI_BLAST()
-    #sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
+    ncbi_blast = NCBI_BLAST()
+    sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
 
     # Run NCBI BLAST search and retrieve top 5 results
-    #ncbi_blast.main(sequence)
+    ncbi_blast.main(sequence)
 
     sopma = SOPMA()
     fasta_sequences = sopma.read_sequence_file('blast_result.txt')
@@ -358,12 +330,7 @@ def main():
         sopma.run_sopma(amino_acid_sequence, accession_number, sopma.write_to_database)
 
     predictor = DeepGOPredictor()
-    predictor.fill_database_from_file('deepgo_result.txt')
-
-    print("Data written to database.")
-
+    predictor.main(fasta_sequences)  # Pass all fasta sequences for DeepGO prediction
 
 if __name__ == "__main__":
     main()
-
-
