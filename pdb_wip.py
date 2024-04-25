@@ -1,12 +1,12 @@
 import requests
 import json
-from Bio.PDB import PDBParser
-from dash import Dash, html, Input, Output,dcc
+import dash_bio as dashbio
+from dash import Dash, html, Input, Output, callback
+from dash_bio.utils import create_mol3d_style
 from io import StringIO
-import dash_bio
-from datetime import datetime
 
 
+#### Get top PDB ID matches for FASTA outputs ####
 # get fasta from blast results
 fasta_sequences = []
 with open('blast_result.txt', 'r') as file:
@@ -65,7 +65,9 @@ for fasta_sequence in fasta_sequences:
     # append top identifier to the list of all matches for all sequences
     top_identifiers.append(top_identifier)
 
+#### Set up Dash ####
 app = Dash(__name__)
+
 
 # fetch PDB content
 def fetch_pdb_content(pdb_id):
@@ -77,6 +79,7 @@ def fetch_pdb_content(pdb_id):
     except requests.RequestException as e:
         print(f"Failed to fetch PDB content for {pdb_id}. Error: {e}")
         return None
+
 
 # parse PDB content
 def parse_pdb_content(pdb_content):
@@ -92,7 +95,7 @@ def parse_pdb_content(pdb_content):
         for chain in model:
             for residue in chain:
                 for atom in residue:
-                    # Convert float32 coordinates to regular floats
+                    # convert float32 coordinates to regular floats
                     coord = [float(coord) for coord in atom.coord]
                     atoms.append({
                         "elem": atom.element,
@@ -106,13 +109,6 @@ def parse_pdb_content(pdb_content):
 
     return atoms
 
-def xyz_reader(atoms, format="json"):
-    if format == "json":
-        return json.dumps(atoms)
-    elif format == "dict":
-        return atoms
-    else:
-        raise ValueError("Invalid format. Use 'json' or 'dict'.")
 
 # fetch PDB content for the first result (initial query)
 first_pdb_id = top_identifiers[0] if top_identifiers else None
@@ -125,14 +121,8 @@ if pdb_content:
 else:
     atoms = []
 
-# define the layout
-app.layout = html.Div([
-    html.Button('Update', id='update-button'),  # Button to trigger update
-    html.Div(id='molecule3d-viewer'),  # Container for Molecule3dViewer
-    html.Div(id='timer-output')  # Container for displaying the timer
-])
 
-
+#### timer set up ######
 # callback to update the timer every second
 @app.callback(
     Output('timer-output', 'children'),
@@ -142,48 +132,47 @@ def update_timer(n):
     return f"Page loaded {n} seconds ago."
 
 
-# Callback to update the Molecule3dViewer with parsed PDB content
-@app.callback(
-    Output('molecule3d-viewer', 'children'),
-    [Input('update-button', 'n_clicks')]
-)
-def update_molecule(n_clicks):
-    if n_clicks is not None and n_clicks > 0:
-        start_time = datetime.now()  # Record the start time
-
-        # fetch PDB content for the first identifier
-        first_pdb_id = top_identifiers[0] if top_identifiers else None
-        pdb_content = fetch_pdb_content(first_pdb_id)
-
-        # parse PDB content
-        if pdb_content:
-            atoms = parse_pdb_content(pdb_content)
-            return dash_bio.Molecule3dViewer(
-                id='molecule-viewer',
-                modelData={'atoms': atoms},
-                styles={}
-            )
-        else:
-            return "Failed to fetch PDB content. Please check the PDB ID."
-
-        end_time = datetime.now()  # Record the end time
-        elapsed_time = end_time - start_time  # Calculate the elapsed time
-        print(f"Page loading for: {elapsed_time}")
-    else:
-        return html.Div()
-
-
 # define the interval component to update the timer every 5 seconds
 app.layout = html.Div([
     dcc.Interval(id='interval-component', interval=1000, n_intervals=0),
     html.Button('Update', id='update-button'),  # Button to trigger update
-    html.Div(id='molecule3d-viewer'),  # Container for Molecule3dViewer
-    html.Div(id='timer-output')  # Container for displaying the timer
+    html.Div(id='timer-output')  # container for displaying the timer
 ])
 
+#### Molecule3DViewer ####
+styles = create_mol3d_style()
+
+app.layout = html.Div([
+    dashbio.Molecule3dViewer(
+        id='dashbio-default-molecule3d',
+        modelData={},
+        styles=styles
+    ),
+    "Selection data",
+    html.Hr(),
+    html.Div(id='default-molecule3d-output')
+])
+
+@app.callback(
+    Output('default-molecule3d-output', 'children'),
+    Input('dashbio-default-molecule3d', 'selectedAtomIds')
+)
+
+def show_selected_atoms(atom_ids):
+    if atom_ids is None or len(atom_ids) == 0:
+        return 'No atom has been selected. Click somewhere on the molecular \
+        structure to select an atom.'
+    return [html.Div([
+        html.Div('Element: {}'.format(atoms['atoms'][atm]['elem'])),
+        html.Div('Chain: {}'.format(atoms['atoms'][atm]['chain'])),
+        html.Div('Residue name: {}'.format(atoms['atoms'][atm]['residue_name'])),
+        html.Br()
+    ]) for atm in atom_ids]
+
+
+#### Main Code ####
 if __name__ == '__main__':
-    # Print top identifiers
+    # print top identifiers
     for i, top_identifier in enumerate(top_identifiers):
         print(f"Top Identifier for sequence {i + 1}: {top_identifier if top_identifier else 'None'}")
-    app.run_server(debug=True)
-
+        app.run_server(debug=True)
