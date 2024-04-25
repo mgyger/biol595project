@@ -224,9 +224,6 @@ class NCBI_BLAST:
         # Run NCBI BLAST search and retrieve top 5 results
         top_results = self.run_ncbi_blast(sequence)
 
-        # Write BLAST results to the database
-        self.write_to_database(top_results)
-
         # Write data to a text file
         with open("blast_result.txt", "w") as file:
             # Write user input sequence at the top
@@ -245,6 +242,9 @@ class NCBI_BLAST:
                 file.write("Identity (%): " + str(identity) + "\n")
                 file.write("Fasta Sequence: " + fasta_sequence + "\n")
                 file.write("\n")
+
+        # Write BLAST results to the database
+        self.write_to_database(top_results)
 
         print("Data written to blast_result.txt.")
 

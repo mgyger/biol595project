@@ -1,6 +1,5 @@
 from Bio.Blast import NCBIWWW, NCBIXML
 
-
 def run_ncbi_blast(sequence):
     # Perform BLAST search on NCBI
     result_handle = NCBIWWW.qblast("blastn", "nt", sequence)

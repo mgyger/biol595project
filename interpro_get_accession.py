@@ -50,6 +50,7 @@ def main():
                     locations.append(f"{f['start']}..{f['end']}")
 
             table_data.append([
+                protein["accession"].upper(),  # Move "protein_accession" to the most left
                 meta["accession"],
                 meta["name"] or "-",
                 meta["source_database"],
@@ -57,14 +58,13 @@ def main():
                 meta["integrated"] or "-",
                 signatures,
                 go_terms,
-                protein["accession"].upper(),
                 str(protein["protein_length"]),
                 ",".join(locations)
             ])
 
         # Create SQL table schema
         table_name = "InterPro_Data"
-        columns = ["accession", "name", "source_database", "type", "integrated", "signatures", "go_terms", "protein_accession", "protein_length", "locations"]
+        columns = ["protein_accession", "accession", "name", "source_database", "type", "integrated", "signatures", "go_terms", "protein_length", "locations"]
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([f'{col} TEXT' for col in columns])});"
 
         # Connect to SQLite3 database
