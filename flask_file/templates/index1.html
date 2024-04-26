@@ -33,7 +33,7 @@
         var viewer = $3Dmol.createViewer("viewer", {backgroundColor: 'white'});
         var url = 'https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb';
 
-        // Fetch PDB data from the URL
+        // fetch PDB data from URL
         fetch(url)
             .then(response => response.text())
             .then(data => {
