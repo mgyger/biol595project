@@ -122,7 +122,7 @@ def write_pdb(atoms, filename):
     with open(filename, 'w') as f:
         for atom in atoms:
             pdb_line = f"ATOM  {atom['serial']:>5} {atom['name']:<4} {atom['residue']:>3} {atom['chain']:1} \
-{atom['resSeq']:>4}    {atom['x']:>8.3f}{atom['y']:>8.3f}{atom['z']:>8.3f}{atom['occupancy']:>6.2f}{atom['tempFactor']:>6.2f}           {atom['element']:>2}\n"
+{atom['resSeq']:>4}    {atom['x']:>8.3f}{atom['y']:>8.3f}{atom['z']:>8.3f}{atom['occupancy']:>6.2f}{atom['tempFactor']:>6.2f}{atom['element']:>2}\n"
             f.write(pdb_line)
 
 write_pdb(atoms, 'protein.pdb')
