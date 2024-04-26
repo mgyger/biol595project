@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3Dmol.js Example</title>
+    <script src="https://3dmol.csb.pitt.edu/build/3Dmol.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 100%;
+            height: 100%;
+        }
+        #viewer {
+            width: 70%;
+            height: 100%;
+        }
+        #legend {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .legend-item div {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+        }
+        .legend-item span {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="viewer"></div>
+        <div id="legend">
+            <div class="legend-item">
+                <div style="background-color: #ef476f;"></div>
+                <span>Atom Type "N"</span>
+            </div>
+            <div class="legend-item">
+                <div style="background-color: #f78c6b;"></div>
+                <span>Atom Type "C"</span>
+            </div>
+            <div class="legend-item">
+                <div style="background-color: #ffd166;"></div>
+                <span>Atom Type "O"</span>
+            </div>
+            <div class="legend-item">
+                <div style="background-color: #06d6a0;"></div>
+                <span>Atom Type "H"</span>
+            </div>
+            <div class="legend-item">
+                <div style="background-color: #118ab2;"></div>
+                <span>Atom Type "P"</span>
+            </div>
+            <div class="legend-item">
+                <div style="background-color: #073b4c;"></div>
+                <span>Atom Type "S"</span>
+            </div>
+            <!-- Add more legend items as needed -->
+        </div>
+    </div>
+    <script>
+        function setAtomColors(viewer, atomData) {
+            var atomTypes = {};
+            atomData.forEach(line => {
+                if (line.startsWith('ATOM')) {
+                    var atomType = line.slice(-1).trim(); // Extract atom type from the last column
+                    switch(atomType) {
+                        case "N":
+                            atomTypes[atomType] = '#ef476f';
+                            break;
+                        case "C":
+                            atomTypes[atomType] = '#f78c6b';
+                            break;
+                        case "O":
+                            atomTypes[atomType] = '#ffd166';
+                            break;
+                        case "H":
+                            atomTypes[atomType] = '#06d6a0';
+                            break;
+                        case "P":
+                            atomTypes[atomType] = '#118ab2';
+                            break;
+                        case "S":
+                            atomTypes[atomType] = '#073b4c';
+                            break;
+                        default:
+                            atomTypes[atomType] = $3Dmol.elementColors.defaultColors[0]; // Assign default color
+                            break;
+                    }
+                }
+            });
+            viewer.setStyle({}, {stick: {}});
+            Object.keys(atomTypes).forEach(atomType => {
+                viewer.setStyle({atom: atomType}, {cartoon: {color: atomTypes[atomType]}});
+            });
+            viewer.zoomTo();
+            viewer.render();
+        }
+
+        var viewer = $3Dmol.createViewer("viewer", {backgroundColor: 'white'});
+        var url = 'https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb';
+
+        // Fetch PDB data from the URL
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                viewer.addModel(data, "pdb", {style: 'cartoon'});
+                setAtomColors(viewer, data.split('\n'));
+            });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

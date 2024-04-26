@@ -4,7 +4,7 @@ from Bio.PDB import PDBParser
 from io import StringIO
 
 
-#### Get top PDB ID matches for FASTA outputs ####
+#### get top PDB ID matches for FASTA outputs ####
 # get fasta from blast results
 fasta_sequences = []
 with open('blast_result.txt', 'r') as file:
@@ -105,7 +105,6 @@ def parse_pdb_content(pdb_content):
                     })
 
     return atoms
-
 
 # fetch PDB content for the first result (initial query)
 first_pdb_id = top_identifiers[0] if top_identifiers else None
