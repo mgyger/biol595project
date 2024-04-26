@@ -10,7 +10,7 @@ from io import StringIO
 
 class SOPMA:
     def write_to_database(self, accession_number, secondary_structure):
-        conn = sqlite3.connect('output_data.db')
+        conn = sqlite3.connect('outputs_data.db')
         cursor = conn.cursor()
 
         secondary_structure_text = '\n'.join(secondary_structure)
@@ -150,7 +150,7 @@ class SOPMA:
 
 '''class NCBI_BLAST:
     def write_to_database(self, top_results):
-        conn = sqlite3.connect('output_data.db')
+        conn = sqlite3.connect('outputs_data.db')
         cursor = conn.cursor()
         for result in top_results:
             gene_name, accession, scientific_name, e_score, alignment_score, identity, fasta_sequence = result
@@ -269,7 +269,7 @@ class DeepGOPredictor:
 
     def write_to_database(self, accession_number, predictions):
         if predictions is not None:  # Add a check for None
-            conn = sqlite3.connect('output_data.db')
+            conn = sqlite3.connect('outputs_data.db')
             cursor = conn.cursor()
             for category_name, functions in predictions:
                 for go_id, description, score in functions:
@@ -277,7 +277,6 @@ class DeepGOPredictor:
                                    (accession_number, category_name, go_id, description, score))
             conn.commit()
             conn.close()
-
 class InterProDataLoader:
     def __init__(self, uniprot_file_path, database_file_path):
         self.uniprot_file_path = uniprot_file_path
@@ -347,58 +346,140 @@ class InterProDataLoader:
                     ",".join(locations)
                 ])
 
-            self.database_file_path = 'output_data.db'
+            self.database_file_path = 'outputs_data.db'
 
             self.insert_into_database(table_name, table_data)
             print("Data inserted into the output_data database successfully.")
-
 class PDB:
-    def __init__(self):
-        pass
+    #### get top PDB ID matches for FASTA outputs ####
+    # get fasta from blast results
+    fasta_sequences = []
+    with open('blast_result.txt', 'r') as file:
+        data = file.read()
 
-    def get_blast_results(self):
-        # This method will read blast results from blast_result.txt
-        blast_results = []
-        with open('blast_result.txt', 'r') as file:
-            data = file.read()
+    # split the data
+    records = data.split('\n\n')
 
-        # split the data
-        records = data.split('\n\n')
+    for record in records:
+        lines = record.split('\n')
+        for line in lines:
+            if line.startswith('Fasta Sequence:'):
+                fasta_sequence = line.split(': ')[1].strip()
+                fasta_sequences.append(fasta_sequence)
+                break
 
-        for record in records:
-            lines = record.split('\n')
-            for line in lines:
-                if line.startswith('Fasta Sequence:'):
-                    fasta_sequence = line.split(': ')[1].strip()
-                    blast_results.append(fasta_sequence)
-                    break
+    # set up to only get the first, closest result from pdb
+    top_identifiers = []
 
-        return blast_results
+    # set up search query and define
+    for fasta_sequence in fasta_sequences:
+        query = {
+            "query": {
+                "type": "terminal",
+                "service": "sequence",
+                "parameters": {
+                    "evalue_cutoff": 1,
+                    "identity_cutoff": 0.9,
+                    "sequence_type": "protein",
+                    "value": fasta_sequence
+                }
+            },
+            "request_options": {
+                "scoring_strategy": "sequence"
+            },
+            "return_type": "entry"
+        }
 
-    def fetch_pdb_content(self, pdb_id):
-        # Fetch PDB content using pdb_id
-        pass
+        # encode the query as JSON
+        encoded_query = json.dumps(query)
 
-    def parse_pdb_content(self, pdb_content):
-        # Parse PDB content
-        pass
+        # construct the api url for searches of interest
+        api_url = "https://search.rcsb.org/rcsbsearch/v2/query?json=" + encoded_query
 
-    def write_pdb(self, atoms, filename):
-        # Write PDB file
-        pass
+        # set GET request to the API
+        response = requests.get(api_url)
 
-    def main(self):
-        # Get blast results after NCBI_BLAST has finished
-        blast_results = self.get_blast_results()
+        # parse JSON response
+        json_response = response.json()
 
-        # Process blast_results and fetch PDB content
-        for fasta_sequence in blast_results:
-            # Perform PDB search and processing
-            pass
+        # extract the top identifier if match exists
+        top_identifier = None
+        if "result_set" in json_response and len(json_response["result_set"]) > 0:
+            top_identifier = json_response["result_set"][0]["identifier"]
+
+        # append top identifier to the list of all matches for all sequences
+        top_identifiers.append(top_identifier)
+
+    for i, top_identifier in enumerate(top_identifiers):
+        print(f"Top Identifier for sequence {i + 1}: {top_identifier if top_identifier else 'None'}")
+
+    # fetch PDB content
+    def fetch_pdb_content(pdb_id):
+        url = f'https://files.rcsb.org/download/{pdb_id}.pdb'
+        try:
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
+            return response.text
+        except requests.RequestException as e:
+            print(f"Failed to fetch PDB content for {pdb_id}. Error: {e}")
+            return None
+
+    # parse PDB content
+    def parse_pdb_content(pdb_content):
+        # create file-like object from the PDB content string
+        pdb_file = StringIO(pdb_content)
+
+        # parse the PDB file
+        parser = PDBParser()
+        structure = parser.get_structure("pdb_data", pdb_file)
+
+        atoms = []
+        for model in structure:
+            for chain in model:
+                for residue in chain:
+                    for atom in residue:
+                        # convert float32 coordinates to regular floats
+                        coord = [float(coord) for coord in atom.coord]
+                        atoms.append({
+                            "serial": atom.serial_number,
+                            "name": atom.name,
+                            "residue": residue.resname,
+                            "chain": chain.id,
+                            "resSeq": residue.id[1],
+                            "x": coord[0],
+                            "y": coord[1],
+                            "z": coord[2],
+                            "occupancy": atom.occupancy,
+                            "tempFactor": atom.bfactor,
+                            "element": atom.element
+                        })
+
+        return atoms
+
+    # fetch PDB content for the first result (initial query)
+    first_pdb_id = top_identifiers[0] if top_identifiers else None
+    pdb_content = fetch_pdb_content(first_pdb_id)
+
+    # parse PDB content
+    if pdb_content:
+        atoms = parse_pdb_content(pdb_content)
+
+    else:
+        atoms = []
+
+    def write_pdb(atoms, filename):
+        with open(filename, 'w') as f:
+            for atom in atoms:
+                pdb_line = f"ATOM  {atom['serial']:>5} {atom['name']:<4} {atom['residue']:>3} {atom['chain']:1} \
+    {atom['resSeq']:>4}    {atom['x']:>8.3f}{atom['y']:>8.3f}{atom['z']:>8.3f}{atom['occupancy']:>6.2f}{atom['tempFactor']:>6.2f}{atom['element']:>2}\n"
+                f.write(pdb_line)
+
+    write_pdb(atoms, 'protein.pdb')
+
 
 
 def main():
-    conn = sqlite3.connect('output_data.db')
+    conn = sqlite3.connect('outputs_data.db')
     cursor = conn.cursor()
 
     # Create tables for each class's output
@@ -438,7 +519,6 @@ def main():
                      )''')
     # Commit changes
     conn.commit()
-
     #ncbi_blast = NCBI_BLAST()
     #sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
 
@@ -457,14 +537,11 @@ def main():
     predictor.conn = conn
     predictor.main(fasta_sequences)
 
-    loader = InterProDataLoader("uniprot_entry_codes.txt", "output_data.db")
+    loader = InterProDataLoader("uniprot_entry_codes.txt", "outputs_data.db")
     loader.fetch_and_store_interpro_data("InterPro_Data")
 
     conn.close()
 
-    # After the other classes have finished, execute the PDB class
-    pdb = PDB()
-    pdb.main()
 
 
 if __name__ == "__main__":
