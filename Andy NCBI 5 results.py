@@ -27,6 +27,13 @@ def run_ncbi_blast(sequence):
 
 def get_genomic_sequence_from_user():
     sequence = input("Enter the genomic sequence: ")
+
+    # Check if the sequence contains only valid nucleotides
+    if all(nucleotide in ['A', 'G', 'C', 'T'] for nucleotide in sequence.upper()):
+        return sequence
+    else:
+        print("Please input a sequence containing only A, G, C, or T nucleotides.")
+    
     return sequence
 
 
