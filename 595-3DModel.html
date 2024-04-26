@@ -1,0 +1,67 @@
+ 
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <style>
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    width: 80%;
+                    height: 80%;
+                    overflow: auto;
+                }
+                #viewport {
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                }
+                p {
+                    font-size: 24px;
+                    text-align: center; 
+                    margin-top: 20px; 
+                    font-family: stencil std, fantasy;
+                    color: #AA5042;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+            </style>
+        </head>
+            <body>
+                <p>Protein of Interest Best Structure Match</p> 
+                <div id="viewport" class='viewer_3Dmoljs'
+                    data-href='https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb'
+                    data-backgroundcolor='0xffffff'></div>
+
+                 
+            <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+            <script>
+                // Define custom styles for each atom type
+                var customColors = {
+                    "H": {"color": "white"},   // Hydrogen
+                    "C": {"color": "gray"},    // Carbon
+                    "N": {"color": "blue"},    // Nitrogen
+                    "O": {"color": "red"},     // Oxygen
+                    "P": {"color": "orange"},  // Phosphorus
+                    "S": {"color": "yellow"}   // Sulfur
+                };
+
+                // Create viewer
+                var viewer = window.$3Dmol.createViewer("viewport", {backgroundColor: "white"});
+
+                // Load PDB file
+                viewer.addModel($("#viewport").data("href"), "pdb", function() {
+                viewer.setStyle({}, {cartoon: customColors});
+                viewer.zoomTo();
+                viewer.render();
+                console.log("Model loaded successfully.");
+                }, function(err) {
+                    console.error("Error loading model:", err);
+                });
+
+            </script>
+        </body>
+        </html>
+        

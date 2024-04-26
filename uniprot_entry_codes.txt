@@ -1,1 +1,7 @@
+<<<<<<< HEAD
 UniProt Entry Code: G7NWA7
+=======
+
+UniProt Entry Code: P49789
+UniProt Entry Code: P49789
+>>>>>>> origin/main

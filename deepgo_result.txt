@@ -1,0 +1,480 @@
+Accession Number: AY893008
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: AY890541
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: DQ894769
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: NM_001320900
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: NM_001320899
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: AY893008
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: AY890541
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: DQ894769
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: NM_001320900
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: NM_001320899
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: AY893008
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: AY890541
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: DQ894769
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: NM_001320900
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: NM_001320899
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: AY893008
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: AY890541
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: DQ894769
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.632
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.557
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.696
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.544
+
+Biological Process
+GO:0009987 - cellular process - 0.789
+GO:0008152 - metabolic process - 0.778
+GO:0071704 - organic substance metabolic process - 0.756
+GO:0044237 - cellular metabolic process - 0.752
+GO:0044238 - primary metabolic process - 0.72
+GO:0006807 - nitrogen compound metabolic process - 0.718
+GO:0034641 - cellular nitrogen compound metabolic process - 0.675
+GO:1901360 - organic cyclic compound metabolic process - 0.671
+GO:0006725 - cellular aromatic compound metabolic process - 0.667
+GO:0046483 - heterocycle metabolic process - 0.666
+GO:0006139 - nucleobase-containing compound metabolic process - 0.655
+
+Accession Number: NM_001320900
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+
+Accession Number: NM_001320899
+Cellular Component
+GO:0110165 - cellular anatomical entity - 0.629
+GO:0005622 - intracellular anatomical structure - 0.563
+GO:0005737 - cytoplasm - 0.555
+
+Molecular Function
+GO:0003824 - catalytic activity - 0.697
+GO:0016787 - hydrolase activity - 0.592
+GO:0016817 - hydrolase activity, acting on acid anhydrides - 0.543
+
+Biological Process
+GO:0009987 - cellular process - 0.786
+GO:0008152 - metabolic process - 0.782
+GO:0071704 - organic substance metabolic process - 0.761
+GO:0044237 - cellular metabolic process - 0.754
+GO:0044238 - primary metabolic process - 0.723
+GO:0006807 - nitrogen compound metabolic process - 0.721
+GO:0034641 - cellular nitrogen compound metabolic process - 0.68
+GO:1901360 - organic cyclic compound metabolic process - 0.673
+GO:0006725 - cellular aromatic compound metabolic process - 0.67
+GO:0046483 - heterocycle metabolic process - 0.669
+GO:0006139 - nucleobase-containing compound metabolic process - 0.659
+

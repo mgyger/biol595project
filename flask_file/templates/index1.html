@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3Dmol.js Example</title>
+    <script src="https://3dmol.csb.pitt.edu/build/3Dmol.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #viewer {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+        p {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Stencil Std', fantasy;
+            color: #AA5042;
+        }
+    </style>
+</head>
+<body>
+    <p>Protein of Interest: Best Structure Match</p>
+    <div id="viewer"></div>
+    <script>
+        var viewer = $3Dmol.createViewer("viewer", {backgroundColor: 'white'});
+        var url = 'https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb';
+
+        // fetch PDB data from URL
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                viewer.addModel(data, "pdb");
+                viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
+                viewer.zoomTo();
+                viewer.render();
+            });
+    </script>
+</body>
+</html>
+
+
+
+
+
+

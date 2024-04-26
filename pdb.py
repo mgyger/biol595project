@@ -1,12 +1,10 @@
 import requests
 import json
 from Bio.PDB import PDBParser
-from dash import Dash, html, Input, Output,dcc
 from io import StringIO
-import dash_bio
-from datetime import datetime
 
 
+#### get top PDB ID matches for FASTA outputs ####
 # get fasta from blast results
 fasta_sequences = []
 with open('blast_result.txt', 'r') as file:
@@ -65,8 +63,6 @@ for fasta_sequence in fasta_sequences:
     # append top identifier to the list of all matches for all sequences
     top_identifiers.append(top_identifier)
 
-app = Dash(__name__)
-
 # fetch PDB content
 def fetch_pdb_content(pdb_id):
     url = f'https://files.rcsb.org/download/{pdb_id}.pdb'
@@ -92,27 +88,23 @@ def parse_pdb_content(pdb_content):
         for chain in model:
             for residue in chain:
                 for atom in residue:
-                    # Convert float32 coordinates to regular floats
+                    # convert float32 coordinates to regular floats
                     coord = [float(coord) for coord in atom.coord]
                     atoms.append({
-                        "elem": atom.element,
+                        "serial": atom.serial_number,
+                        "name": atom.name,
+                        "residue": residue.resname,
                         "chain": chain.id,
-                        "residue_name": residue.resname,
-                        "residue_number": residue.id[1],
+                        "resSeq": residue.id[1],
                         "x": coord[0],
                         "y": coord[1],
-                        "z": coord[2]
+                        "z": coord[2],
+                        "occupancy": atom.occupancy,
+                        "tempFactor": atom.bfactor,
+                        "element": atom.element
                     })
 
     return atoms
-
-def xyz_reader(atoms, format="json"):
-    if format == "json":
-        return json.dumps(atoms)
-    elif format == "dict":
-        return atoms
-    else:
-        raise ValueError("Invalid format. Use 'json' or 'dict'.")
 
 # fetch PDB content for the first result (initial query)
 first_pdb_id = top_identifiers[0] if top_identifiers else None
@@ -125,65 +117,18 @@ if pdb_content:
 else:
     atoms = []
 
-# define the layout
-app.layout = html.Div([
-    html.Button('Update', id='update-button'),  # Button to trigger update
-    html.Div(id='molecule3d-viewer'),  # Container for Molecule3dViewer
-    html.Div(id='timer-output')  # Container for displaying the timer
-])
+def write_pdb(atoms, filename):
+    with open(filename, 'w') as f:
+        for atom in atoms:
+            pdb_line = f"ATOM  {atom['serial']:>5} {atom['name']:<4} {atom['residue']:>3} {atom['chain']:1} \
+{atom['resSeq']:>4}    {atom['x']:>8.3f}{atom['y']:>8.3f}{atom['z']:>8.3f}{atom['occupancy']:>6.2f}{atom['tempFactor']:>6.2f}{atom['element']:>2}\n"
+            f.write(pdb_line)
 
+write_pdb(atoms, 'protein.pdb')
 
-# callback to update the timer every second
-@app.callback(
-    Output('timer-output', 'children'),
-    [Input('interval-component', 'n_intervals')]
-)
-def update_timer(n):
-    return f"Page loaded {n} seconds ago."
-
-
-# Callback to update the Molecule3dViewer with parsed PDB content
-@app.callback(
-    Output('molecule3d-viewer', 'children'),
-    [Input('update-button', 'n_clicks')]
-)
-def update_molecule(n_clicks):
-    if n_clicks is not None and n_clicks > 0:
-        start_time = datetime.now()  # Record the start time
-
-        # fetch PDB content for the first identifier
-        first_pdb_id = top_identifiers[0] if top_identifiers else None
-        pdb_content = fetch_pdb_content(first_pdb_id)
-
-        # parse PDB content
-        if pdb_content:
-            atoms = parse_pdb_content(pdb_content)
-            return dash_bio.Molecule3dViewer(
-                id='molecule-viewer',
-                modelData={'atoms': atoms},
-                styles={}
-            )
-        else:
-            return "Failed to fetch PDB content. Please check the PDB ID."
-
-        end_time = datetime.now()  # Record the end time
-        elapsed_time = end_time - start_time  # Calculate the elapsed time
-        print(f"Page loading for: {elapsed_time}")
-    else:
-        return html.Div()
-
-
-# define the interval component to update the timer every 5 seconds
-app.layout = html.Div([
-    dcc.Interval(id='interval-component', interval=1000, n_intervals=0),
-    html.Button('Update', id='update-button'),  # Button to trigger update
-    html.Div(id='molecule3d-viewer'),  # Container for Molecule3dViewer
-    html.Div(id='timer-output')  # Container for displaying the timer
-])
-
+#### Main Code ####
 if __name__ == '__main__':
-    # Print top identifiers
+    # print top identifiers
     for i, top_identifier in enumerate(top_identifiers):
         print(f"Top Identifier for sequence {i + 1}: {top_identifier if top_identifier else 'None'}")
-    app.run_server(debug=True)
 

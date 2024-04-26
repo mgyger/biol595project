@@ -1,0 +1,30 @@
+var viewer = $3Dmol.createViewer("viewer", {backgroundColor: 'white'});
+var url = 'https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb';
+
+// Set atom colors
+var setAtomColors = function(atom) {
+    switch(atom.elem) {
+        case 'N': return '#ef476f'; // Atom Type "N"
+        case 'C': return '#f78c6b'; // Atom Type "C"
+        case 'O': return '#ffd166'; // Atom Type "O"
+        case 'H': return '#06d6a0'; // Atom Type "H"
+        case 'P': return '#118ab2'; // Atom Type "P"
+        case 'S': return '#073b4c'; // Atom Type "S"
+        default: return '#000000'; // Default color
+    }
+};
+
+// Fetch PDB data from the URL
+fetch(url)
+    .then(response => response.text())
+    .then(data => {
+        viewer.addModel(data, "pdb", {style: {scheme: 'default'}});
+        viewer.setStyle({}, {stick: {}}); // Remove default stick style
+        viewer.setStyle({},{custom: setAtomColors}); // Apply custom atom colors
+        viewer.zoomTo();
+        viewer.render();
+    })
+    .catch(error => {
+        console.error('Error fetching model data:', error);
+    });
+
