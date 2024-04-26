@@ -27,3 +27,4 @@ fetch(url)
     .catch(error => {
         console.error('Error fetching model data:', error);
     });
+

@@ -5,130 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3Dmol.js Example</title>
     <script src="https://3dmol.csb.pitt.edu/build/3Dmol.js"></script>
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
     <style>
         body {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        #container {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-            height: 100%;
             width: 100%;
+            height: 100%;
         }
         #viewer {
-            flex: 3;
+            width: 100%;
             height: 100%;
-            border: 1px solid black; /* Add a border for visualization */
+            position: absolute;
         }
-        #legend {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            max-width: 200px; /* Set maximum width for the legend */
-            margin: auto; /* Center the legend horizontally */
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .legend-item div {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 50%;
-        }
-        .legend-item span {
-            flex-grow: 1;
+        p {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Stencil Std', fantasy;
+            color: #AA5042;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="viewer"></div>
-        <div id="legend">
-            <div class="legend-item">
-                <div style="background-color: #ef476f;"></div>
-                <span>Atom Type "N"</span>
-            </div>
-            <div class="legend-item">
-                <div style="background-color: #f78c6b;"></div>
-                <span>Atom Type "C"</span>
-            </div>
-            <div class="legend-item">
-                <div style="background-color: #ffd166;"></div>
-                <span>Atom Type "O"</span>
-            </div>
-            <div class="legend-item">
-                <div style="background-color: #06d6a0;"></div>
-                <span>Atom Type "H"</span>
-            </div>
-            <div class="legend-item">
-                <div style="background-color: #118ab2;"></div>
-                <span>Atom Type "P"</span>
-            </div>
-            <div class="legend-item">
-                <div style="background-color: #073b4c;"></div>
-                <span>Atom Type "S"</span>
-            </div>
-            <!-- Add more legend items as needed -->
-        </div>
-    </div>
+    <p>Protein of Interest: Best Structure Match</p>
+    <div id="viewer"></div>
     <script>
         var viewer = $3Dmol.createViewer("viewer", {backgroundColor: 'white'});
         var url = 'https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb';
-
-        // Set atom colors
-        var setAtomColors = function(atom) {
-            switch(atom.elem) {
-                case 'N': return '#ef476f'; // Atom Type "N"
-                case 'C': return '#f78c6b'; // Atom Type "C"
-                case 'O': return '#ffd166'; // Atom Type "O"
-                case 'H': return '#06d6a0'; // Atom Type "H"
-                case 'P': return '#118ab2'; // Atom Type "P"
-                case 'S': return '#073b4c'; // Atom Type "S"
-                default: return '#000000'; // Default color
-            }
-        };
 
         // Fetch PDB data from the URL
         fetch(url)
             .then(response => response.text())
             .then(data => {
-                viewer.addModel(data, "pdb", {style: {scheme: 'default'}});
-                viewer.setStyle({}, {stick: {}}); // Remove default stick style
-                viewer.setStyle({},{custom: setAtomColors}); // Apply custom atom colors
+                viewer.addModel(data, "pdb");
+                viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
                 viewer.zoomTo();
                 viewer.render();
-            })
-            .catch(error => {
-                console.error('Error fetching model data:', error);
             });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 
 
 
