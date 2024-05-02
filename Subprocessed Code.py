@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 from Bio.Blast import NCBIWWW, NCBIXML
 import sqlite3
@@ -183,6 +184,10 @@ class SOPMA:
 
     def get_genomic_sequence_from_user(self):
         sequence = input("Enter the genomic sequence: ")
+        if all(nucleotide in ['A', 'G', 'C', 'T'] for nucleotide in sequence.upper()):
+            return sequence
+    else:
+        print("Please input a sequence containing only A, G, C, or T nucleotides.")
         return sequence
 
     def main(self, sequence):  
@@ -211,7 +216,47 @@ class SOPMA:
         self.write_to_database(top_results)
 
         print("Data written to blast_result.txt.")'''
+class UniprotFetcher:
+    def __init__(self, blast_file_path):
+        self.blast_file_path = blast_file_path
+        self.accession_numbers = []
 
+    def _extract_accession_numbers(self):
+        with open(self.blast_file_path, "r") as blast_file:
+            for line in blast_file:
+                accession_number_match = re.match(r'Accession Number: (.+)', line)
+                if accession_number_match:
+                    accession_number = accession_number_match.group(1)
+                    if accession_number != "Entry":
+                        self.accession_numbers.append(accession_number)
+
+    def fetch_uniprot_entries(self, nucleotide_accession):
+        url = f"https://rest.uniprot.org/uniprotkb/search?query={nucleotide_accession}&format=tsv"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            lines = response.text.split('\n')
+            entries = [line.split('\t') for line in lines]
+            return entries
+        else:
+            print(f"Error: {response.status_code} - {response.reason}")
+            return None
+
+    def fetch_and_write_uniprot_entries(self, output_file_path="uniprot_entry_codes.txt"):
+        self._extract_accession_numbers()
+
+        all_uniprot_entries = set()  # Use a set to store unique entry codes
+        for accession_number in self.accession_numbers:
+            uniprot_entries = self.fetch_uniprot_entries(accession_number)
+            if uniprot_entries:
+                for entry in uniprot_entries:
+                    if entry and entry[0].strip() and entry[0].strip() != "Entry":  # Exclude 'Entry'
+                        all_uniprot_entries.add(entry[0])
+
+        with open(output_file_path, "w") as f:
+            for entry_code in all_uniprot_entries:
+                f.write("UniProt Entry Code: " + entry_code + "\n")
+        print("UniProt entry codes written to", output_file_path)
 
 class DeepGOPredictor:
     def __init__(self):
@@ -536,6 +581,9 @@ def main():
     predictor = DeepGOPredictor()
     predictor.conn = conn
     predictor.main(fasta_sequences)
+
+    uniprot_fetcher = UniprotFetcher("blast_result.txt")
+    uniprot_fetcher.fetch_and_write_uniprot_entries()
 
     loader = InterProDataLoader("uniprot_entry_codes.txt", "outputs_data.db")
     loader.fetch_and_store_interpro_data("InterPro_Data")
