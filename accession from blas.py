@@ -51,5 +51,5 @@ class UniprotFetcher:
 
 
 if __name__ == "__main__":
-    uniprot_fetcher = UniprotFetcher("blast_result.txt")
+    uniprot_fetcher = UniprotFetcher("flask_file/blast_result.txt")
     uniprot_fetcher.fetch_and_write_entries()

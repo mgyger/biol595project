@@ -12,55 +12,108 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        #viewport {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        p {
+        #title {
             font-size: 24px;
+            font-weight: bolder;
             text-align: center;
             margin-top: 20px;
-            font-family: stencil std, fantasy;
+            font-family: helvetica, sans-serif;
             color: #AA5042;
-            margin-left: auto;
-            margin-right: auto;
+            background-color: #c9c9c9;
+            width: 100%;
+        }
+        #content {
+            display: flex;
+            flex: 1;
+            width: 100%;
+        }
+        #viewer-container {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+        }
+        .viewport {
+            width: 95%;
+            height: 45%;
+            border: none;
+            overflow: auto;
+        }
+        .render-title {
+            font-size: 20px;
+            font-weight: bold;
+            font-family: garamond, serif;
+            text-align: center;
+            color: #7871AA;
+            margin-bottom: 5px;
+            background-color: #c9c9c9;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #legend-container {
+         display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+         }
+        #legend {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            padding: 10px;
+            background-color: #c9c9c9;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
-    <p>Protein of Interest: Best Structure Match</p>
-    <div id="viewport" class='viewer_3Dmoljs'
-        data-href='https://raw.githubusercontent.com/mgyger/biol595project/main/protein.pdb'
-        data-backgroundcolor='0xffffff'></div>
+    <div id="title">Protein of Interest: Best Structure Match</div>
 
-    <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    var customColors = {
-        "H": {"color": "ef476f"},
-        "C": {"color": "f78c6b"},
-        "N": {"color": "ffd166"},
-        "O": {"color": "06d6a0"},
-        "P": {"color": "118ab2"},
-        "S": {"color": "073b4c"}
-    };
+    <div id="content">
+        <div id="viewer-container">
+            <div class="render-title">Cartoon Render</div>
+            <!-- Top iframe with cartoon style -->
+            <iframe class="viewport" src="https://3Dmol.org/viewer.html?pdb={{ first_pdb_id }}&style=cartoon"></iframe>
 
-    var viewer = _3Dmol.createViewer("viewport", {backgroundColor: "white"});
+            <div class="render-title">Stick Render with Amino Acid Labeling</div>
+            <!-- Bottom iframe with stick style and amino color scheme -->
+            <iframe class="viewport" src="https://3Dmol.org/viewer.html?pdb={{ first_pdb_id }}&style=stick:colorscheme~amino"></iframe>
+        </div>
 
-    viewer.addModel($("#viewport").data("href"), "pdb", function() {
-        viewer.setStyle({}, {cartoon: {colorfunc: customColors}});
-        viewer.zoomTo();
-        viewer.render();
-        console.log("Model loaded successfully.");
-    }, function(err) {
-        console.error("Error loading model:", err);
-    });
-    console.log(_3Dmol.version);
-});
-
-
-    </script>
+        <!-- Legend for amino acid color scheme -->
+        <div id="legend">
+            <div>Legend:</div>
+            <div style="color: #c8c8c8;">ALA</div>
+            <div style="color: #145aff;">ARG</div>
+            <div style="color: #00dcdc;">ASN</div>
+            <div style="color: #e60a0a;">ASP</div>
+            <div style="color: #e6e600;">CYS</div>
+            <div style="color: #00dcdc;">GLN</div>
+            <div style="color: #e60a0a;">GLU</div>
+            <div style="color: #ebebeb;">GLY</div>
+            <div style="color: #8282d2;">HIS</div>
+            <div style="color: #0f820f;">ILE</div>
+            <div style="color: #0f820f;">LEU</div>
+            <div style="color: #145aff;">LYS</div>
+            <div style="color: #b8a042;">MET</div>
+            <div style="color: #534c52;">PHE</div>
+            <div style="color: #525252;">PRO</div>
+            <div style="color: #ff7042;">SER</div>
+            <div style="color: #b84c00;">THR</div>
+            <div style="color: #4f4600;">TRP</div>
+            <div style="color: #8c704c;">TYR</div>
+            <div style="color: #ff8cff;">VAL</div>
+            <div style="color: #ff00ff;">ASX</div>
+            <div style="color: #ff00ff;">GLX</div>
+        </div>
+    </div>
 </body>
 </html>
+
+
+
+
+

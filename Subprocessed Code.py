@@ -354,7 +354,7 @@ class PDB:
     #### get top PDB ID matches for FASTA outputs ####
     # get fasta from blast results
     fasta_sequences = []
-    with open('blast_result.txt', 'r') as file:
+    with open('flask_file/blast_result.txt', 'r') as file:
         data = file.read()
 
     # split the data

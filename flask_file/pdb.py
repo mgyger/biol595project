@@ -124,7 +124,12 @@ def write_pdb(atoms, filename):
 {atom['resSeq']:>4}    {atom['x']:>8.3f}{atom['y']:>8.3f}{atom['z']:>8.3f}{atom['occupancy']:>6.2f}{atom['tempFactor']:>6.2f}{atom['element']:>2}\n"
             f.write(pdb_line)
 
-write_pdb(atoms, 'protein.pdb')
+write_pdb(atoms, 'templates/protein.pdb')
+
+#for flask file
+def get_first_pdb_id():
+    first_pdb_id = top_identifiers[0]
+    return first_pdb_id
 
 #### Main Code ####
 if __name__ == '__main__':
