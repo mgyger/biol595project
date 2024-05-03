@@ -1,3 +1,32 @@
+"""=====================================================================================================
+Developers: Andy Keck, Morgan Gyger, Daye Kwon
+
+Goal of the Project:
+The purpose of the project is to develop a gene comparison pipeline that integrates data from various databases to analyze and compare two FASTA files containing genes from different species. The pipeline aims to provide comprehensive comparison results for primary, secondary, and tertiary structures, as well as information on binding domains and Gene Ontology (GO) terms. The project will utilize a combination of databases such as NCBI, Interpro, NPS@, PyMOL, DeepGOWeb, and/or DeepFRI to access the necessary data. Data will be stored in a relational database due to the project's pipeline nature, with regular updates required. The aim is to present the results in a digestible and ideally visual format to facilitate interpretation.
+
+What it does:
+This project runs several analyses on a nucleotide sequence given by the user. It then compiles the results of these analyses into one easy-to-view database. Given this information, the user can then make educated predictions as to the function of the protein.
+
+How to use:
+1. Install these required packages: requests, re, bs4, Bio.Blast, sqlite3, json, urllib.error, urllib.request, Bio.PDB, io, flask, pdb
+2. Go to the Subprocessed_code.py file and run it
+3. Insert your desired nucleotide sequence
+4. Run 3Dmodel.py
+5. Click on the HTML link in the console
+
+Possible Roadblocks:
+Long runtime for NCBI
+SOPMA occasionally will not run, citing issues with HTML parsing
+Ensure your python version is compatible with the DeepGoPlus package
+
+Attributions:
+Andy: SOMPA, NCBI, Uniprot, Integration of multiple Python scripts into a central processing pipeline
+Daye: NCBI, Interpro, Deepgoweb, Uniprot
+Morgan: Initiation of project idea, PDB
+
+Date: 3 May 2024
+====================================================================================================="""
+
 import requests
 import re
 from bs4 import BeautifulSoup
