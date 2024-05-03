@@ -1,1 +1,7 @@
 plan readme here?
+How to use:
+1. Install the necessary packages displayed at the top of the Subprocessed_code.py and 3Dmodel.py files
+2. Go to the Subprocessed_code.py file and run it
+3. Insert your desired nucleotide sequence
+4. Run 3Dmodel.py
+5. Click on the HTML link in the console
