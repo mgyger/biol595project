@@ -9,7 +9,7 @@ from urllib.request import urlopen
 from Bio.PDB import PDBParser
 from io import StringIO
 
-class SOPMA:
+class SOPMA: # SOPMA done by ANDY KECK
     def write_to_database(self, accession_number, secondary_structure):
         conn = sqlite3.connect('outputs_data.db')
         cursor = conn.cursor()
@@ -149,7 +149,7 @@ class SOPMA:
                     sequences.append((accession_number, fasta_sequence))
         return sequences
 
-'''class NCBI_BLAST:
+class NCBI_BLAST: # NCBI_BLAST done by both DAYE KWON and ANDY KECK
     def write_to_database(self, top_results):
         conn = sqlite3.connect('outputs_data.db')
         cursor = conn.cursor()
@@ -186,11 +186,11 @@ class SOPMA:
         sequence = input("Enter the genomic sequence: ")
         if all(nucleotide in ['A', 'G', 'C', 'T'] for nucleotide in sequence.upper()):
             return sequence
-    else:
-        print("Please input a sequence containing only A, G, C, or T nucleotides.")
+        else:
+            print("Please input a sequence containing only A, G, C, or T nucleotides.")
         return sequence
 
-    def main(self, sequence):  
+    def main(self, sequence):
         # Run NCBI BLAST search and retrieve top 5 results
         top_results = self.run_ncbi_blast(sequence)
 
@@ -215,8 +215,8 @@ class SOPMA:
 
         self.write_to_database(top_results)
 
-        print("Data written to blast_result.txt.")'''
-class UniprotFetcher:
+        print("Data written to blast_result.txt.")
+class UniprotFetcher: # UniprotFetcher by both DAYE KWON and ANDY KECK
     def __init__(self, blast_file_path):
         self.blast_file_path = blast_file_path
         self.accession_numbers = []
@@ -258,7 +258,7 @@ class UniprotFetcher:
                 f.write("UniProt Entry Code: " + entry_code + "\n")
         print("UniProt entry codes written to", output_file_path)
 
-class DeepGOPredictor:
+class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
     def __init__(self):
         self.url = 'https://deepgo.cbrc.kaust.edu.sa/deepgo/api/create'
         self.headers = {'Content-Type': 'application/json'}
@@ -322,7 +322,7 @@ class DeepGOPredictor:
                                    (accession_number, category_name, go_id, description, score))
             conn.commit()
             conn.close()
-class InterProDataLoader:
+class InterProDataLoader: # InterProDataLoader done by DAYE KWON
     def __init__(self, uniprot_file_path, database_file_path):
         self.uniprot_file_path = uniprot_file_path
         self.database_file_path = database_file_path
@@ -395,7 +395,7 @@ class InterProDataLoader:
 
             self.insert_into_database(table_name, table_data)
             print("Data inserted into the output_data database successfully.")
-class PDB:
+class PDB: # PDB done by MORGAN GYGER
     #### get top PDB ID matches for FASTA outputs ####
     # get fasta from blast results
     fasta_sequences = []
@@ -523,7 +523,7 @@ class PDB:
 
 
 
-def main():
+def main(): # main function compiled by ANDY KECK, MORGAN GYGER, DAYE KWON
     conn = sqlite3.connect('outputs_data.db')
     cursor = conn.cursor()
 
@@ -564,11 +564,11 @@ def main():
                      )''')
     # Commit changes
     conn.commit()
-    #ncbi_blast = NCBI_BLAST()
-    #sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
+    ncbi_blast = NCBI_BLAST()
+    sequence = ncbi_blast.get_genomic_sequence_from_user()  # Get the genomic sequence from the user
 
     # Run NCBI BLAST search and retrieve top 5 results
-    #ncbi_blast.main(sequence)
+    ncbi_blast.main(sequence)
     sopma = SOPMA()
     sopma.conn = conn
     fasta_sequences = sopma.read_sequence_file('blast_result.txt')
