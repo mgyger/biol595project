@@ -1,4 +1,4 @@
-Developers: Andy Keck, Morgan Gyger
+Developers: Andy Keck, Morgan Gyger, Daye Kwon
 
 Goal of the Project:
 The purpose of the project is to develop a gene comparison pipeline that integrates data from various databases to analyze and compare two FASTA files containing genes from different species. The pipeline aims to provide comprehensive comparison results for primary, secondary, and tertiary structures, as well as information on binding domains and Gene Ontology (GO) terms. The project will utilize a combination of databases such as NCBI, Interpro, NPS@, PyMOL, DeepGOWeb, and/or DeepFRI to access the necessary data. Data will be stored in a relational database due to the project's pipeline nature, with regular updates required. The aim is to present the results in a digestible and ideally visual format to facilitate interpretation.
