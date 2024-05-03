@@ -284,7 +284,7 @@ class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
 
             # Write to file if there are filtered predictions
             if any(filtered_predictions):
-                with open('deepgo_result.txt', 'a') as file:
+                with open('../deepgo_result.txt', 'a') as file:
                     file.write(f"Accession Number: {accession_number}\n")
                     for category_name, functions in filtered_predictions:
                         if functions:
@@ -579,7 +579,7 @@ def main(): # main function compiled by ANDY KECK, MORGAN GYGER, DAYE KWON
     uniprot_fetcher = UniprotFetcher("blast_result.txt")
     uniprot_fetcher.fetch_and_write_uniprot_entries()
 
-    loader = InterProDataLoader("uniprot_entry_codes.txt", "outputs_data.db")
+    loader = InterProDataLoader("../uniprot_entry_codes.txt", "outputs_data.db")
     loader.fetch_and_store_interpro_data("InterPro_Data")
 
     conn.close()

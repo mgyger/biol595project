@@ -41,7 +41,7 @@ top_result = run_ncbi_blast(sequence_A)[0]
 gene_name, accession, scientific_name, e_score, alignment_score, identity, fasta_sequence = top_result
 
 # Write data to a text file
-with open("flask_file/blast_result.txt", "w") as file:
+with open("CLICKHERE/flask_file/blast_result.txt", "w") as file:
     file.write("Gene Name: " + gene_name + "\n")
     file.write("Accession Number: " + accession + "\n")
     file.write("Scientific Name: " + scientific_name + "\n")

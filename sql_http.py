@@ -1,3 +1,12 @@
+"""=================================================================================================
+sql_http.py
+
+Establish a Flask web application to manage and showcase data stored in an SQLite database.
+
+Daye Kwon     3 May 2024
+================================================================================================="""
+
+
 from flask import Flask, render_template
 import sqlite3
 
@@ -104,7 +113,7 @@ if __name__ == "__main__":
     create_sql_table()
 
     # Call the function to generate the HTML table from the SQLite database
-    generate_html_table_from_sqlite("interpro_data.db", "templates/table.html")
+    generate_html_table_from_sqlite("interpro_data.db", "CLICKHERE/templates/table.html")
 
     # Run the Flask application
     app.run(debug=True)

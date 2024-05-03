@@ -149,7 +149,7 @@ def read_sequence_file(filename):
 
 
 # Example usage:
-fasta_sequences = read_sequence_file('flask_file/blast_result.txt')
+fasta_sequences = read_sequence_file('CLICKHERE/flask_file/blast_result.txt')
 for accession_number, fasta_sequence in fasta_sequences:
     amino_acid_sequence = fasta_to_amino_acid(fasta_sequence)
     print("Accession Number:", accession_number)

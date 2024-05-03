@@ -2,6 +2,7 @@ import json
 from urllib.error import HTTPError
 from urllib.request import urlopen
 import sqlite3
+# Daye Kwon
 # Enter the UniProt accession: P49789
 def main():
     # Ask the user for the UniProt accession
@@ -56,7 +57,7 @@ def main():
     create_table_query = f"CREATE TABLE {table_name} ({', '.join([f'{col} TEXT' for col in columns])});"
 
     # Connect to SQLite3 database
-    conn = sqlite3.connect('interpro_data.db')
+    conn = sqlite3.connect('../../interpro_data.db')
     cursor = conn.cursor()
 
     # Execute the SQL command to create the table
