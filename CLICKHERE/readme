@@ -8,15 +8,20 @@ This project runs several analyses on a nucleotide sequence given by the user. I
 
 How to use:
 1. Install these required packages: requests, re, bs4, Bio.Blast, sqlite3, json, urllib.error, urllib.request, Bio.PDB, io, flask, pdb
-2. Go to the Subprocessed_code.py file and run it
+2. Go to the Subprocessed_code.py file and run it, using this sequence as an example: ATGTCGTTCAGATTTGGCCAACATCTCATCAAGCCCTCTGTAGTGTTTCTCAAAACAGAACTGTCCTTCGCTCTTGTGAATAGGAAACCTGTGGTACCAGGACATGTCCTTGTGTGCCCGCTGCGGCCAGTGGAGCGCTTCCATGACCTGCGTCCTGATGAAGTGGCCGATTTGTTTCAAACGACCCAAAGAGTCGGGACAGTGGTGGAAAAACATTTCCATGGGACCTCTCTCACCTTTTCCATGCAGGATGGCCCCGAAGCCGGACAGACTGTGAAGCACGTTCACGTCCATGTTCTTCCCAGGAAGGCTGGAGACTTTCACAGGAATGACAGCATCTATGAGGAGCTCCAGAAACATGACAAGGAGGACTTTCCTGCCTCTTGGAGATCAGAGGAGGAAATGGCAGCAGAAGCCGCAGCTCTGCGGGTCTACTTTCAGTTG
 3. Insert your desired nucleotide sequence
 4. Run 3Dmodel.py
 5. Click on the HTML link in the console
 
 Possible Roadblocks:
-Long runtime for NCBI
-SOPMA occasionally will not run, citing issues with HTML parsing
-Ensure your python version is compatible with the DeepGoPlus package
+- Long runtime for NCBI
+  - If you grow impatient with NCBI, you can comment it out and use the pre-populated blast_result.txt file found in the flask_file
+folder to perform the latter analyses
+- SOPMA occasionally will not run, citing issues with HTML parsing
+- Ensure your python version is compatible with the DeepGoPlus package
+- As of now, there is already a populated blast_result.txt file in the flask_file section of the final submission. This is 
+because we were unable to properly integrate the 3D modeling into the full code. If you're performing tests on another code,
+simply drag the new blast_result.txt file into the flask_file folder to perform the modeling
 
 Attributions:
 Andy: SOMPA, NCBI, Uniprot, Integration of multiple Python scripts into a central processing pipeline
