@@ -9,8 +9,18 @@ from urllib.request import urlopen
 from Bio.PDB import PDBParser
 from io import StringIO
 
-class SOPMA: # SOPMA done by ANDY KECK
+class SOPMA: # done by ANDY KECK
+    """Class for running SOPMA analysis on protein sequences and storing results."""
     def write_to_database(self, accession_number, secondary_structure):
+        """Write SOPMA analysis results to a SQLite database.
+
+        Args:
+            accession_number (str): The accession number of the protein sequence.
+            secondary_structure (list): List of secondary structure information.
+
+        Returns:
+            None
+        """
         conn = sqlite3.connect('outputs_data.db')
         cursor = conn.cursor()
 
@@ -21,9 +31,20 @@ class SOPMA: # SOPMA done by ANDY KECK
         conn.close()
 
     def __init__(self):
+        """Initialize SOPMA object with base URL for SOPMA analysis."""
         self.base_url = "https://npsa.lyon.inserm.fr/cgi-bin/npsa_automat.pl?page=/NPSA/npsa_sopma.html"
 
     def run_sopma(self, sequence, accession_number, callback):
+        """Run SOPMA analysis on a protein sequence.
+
+        Args:
+            sequence (str): Protein sequence in FASTA format.
+            accession_number (str): Accession number of the protein sequence.
+            callback (function): Callback function to handle SOPMA results.
+
+        Returns:
+            None
+        """
         # Make get request
         response = requests.get(self.base_url)
 
@@ -61,6 +82,14 @@ class SOPMA: # SOPMA done by ANDY KECK
             print("Error: Failed to retrieve SOPMA page")
 
     def extract_secondary_structure(self, html_content):
+        """Extract secondary structure information from HTML content.
+
+        Args:
+            html_content (str): HTML content of the SOPMA analysis result page.
+
+        Returns:
+            list: List of secondary structure information.
+        """
         structure_names = {
             'h': 'Alpha helix',
             'g': '310 helix',
@@ -98,6 +127,15 @@ class SOPMA: # SOPMA done by ANDY KECK
         return results
 
     def write_to_file(self, data, accession_number):
+        """Write SOPMA analysis results to a text file.
+
+        Args:
+            data (list): List of secondary structure information.
+            accession_number (str): Accession number of the protein sequence.
+
+        Returns:
+            None
+        """
         with open('sopma_result.txt', 'a') as file:
             file.write(f"Accession Number: {accession_number}\n")
             for result in data:
@@ -105,6 +143,15 @@ class SOPMA: # SOPMA done by ANDY KECK
             file.write('\n')
 
     def fasta_to_amino_acid(self, fasta_sequence):
+        """Translate a protein sequence from FASTA format to amino acid sequence.
+
+        Args:
+            fasta_sequence (str): Protein sequence in FASTA format.
+
+        Returns:
+            str: Amino acid sequence.
+        """
+
         codon_table = {
             'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
             'TCT': 'S', 'TCC': 'S', 'TCA': 'S', 'TCG': 'S',
@@ -135,6 +182,14 @@ class SOPMA: # SOPMA done by ANDY KECK
         return amino_acids
 
     def read_sequence_file(self, filename):
+        """Read protein sequences from a file.
+
+        Args:
+            filename (str): Name of the file containing protein sequences.
+
+        Returns:
+            list: List of tuples containing accession numbers and protein sequences.
+        """
         sequences = []
         with open(filename, 'r') as file:
             accession_number = ''
@@ -149,8 +204,17 @@ class SOPMA: # SOPMA done by ANDY KECK
                     sequences.append((accession_number, fasta_sequence))
         return sequences
 
-class NCBI_BLAST: # NCBI_BLAST done by both DAYE KWON and ANDY KECK
+class NCBI_BLAST: # done by both ANDY KECK and DAYE KWON
+    """Class for running NCBI BLAST search and storing results."""
     def write_to_database(self, top_results):
+        """Write NCBI BLAST search results to a SQLite database.
+
+        Args:
+            top_results (list): List of top BLAST search results.
+
+        Returns:
+            None
+        """
         conn = sqlite3.connect('outputs_data.db')
         cursor = conn.cursor()
         for result in top_results:
@@ -160,6 +224,14 @@ class NCBI_BLAST: # NCBI_BLAST done by both DAYE KWON and ANDY KECK
         conn.commit()
         conn.close()
     def run_ncbi_blast(self, sequence):
+        """Run NCBI BLAST search.
+
+        Args:
+            sequence (str): Genomic sequence to search.
+
+        Returns:
+            list: List of top BLAST search results.
+        """
         # Perform BLAST search on NCBI
         result_handle = NCBIWWW.qblast("blastn", "nt", sequence)
         blast_records = NCBIXML.parse(result_handle)
@@ -183,6 +255,11 @@ class NCBI_BLAST: # NCBI_BLAST done by both DAYE KWON and ANDY KECK
         return top_matches
 
     def get_genomic_sequence_from_user(self):
+        """Get genomic sequence input from the user.
+
+        Returns:
+            str: Genomic sequence input by the user.
+        """
         sequence = input("Enter the genomic sequence: ")
         if all(nucleotide in ['A', 'G', 'C', 'T'] for nucleotide in sequence.upper()):
             return sequence
@@ -191,6 +268,14 @@ class NCBI_BLAST: # NCBI_BLAST done by both DAYE KWON and ANDY KECK
         return sequence
 
     def main(self, sequence):
+        """Main function to run NCBI BLAST search and store results.
+
+        Args:
+            sequence (str): Genomic sequence to search.
+
+        Returns:
+            None
+        """
         # Run NCBI BLAST search and retrieve top 5 results
         top_results = self.run_ncbi_blast(sequence)
 
@@ -216,12 +301,15 @@ class NCBI_BLAST: # NCBI_BLAST done by both DAYE KWON and ANDY KECK
         self.write_to_database(top_results)
 
         print("Data written to blast_result.txt.")
-class UniprotFetcher: # UniprotFetcher by both DAYE KWON and ANDY KECK
+class UniprotFetcher: # done by both ANDY KECK and DAYE KWON
+    """Class for fetching UniProt entries and storing results."""
     def __init__(self, blast_file_path):
+        """Initialize UniprotFetcher object with blast file path."""
         self.blast_file_path = blast_file_path
         self.accession_numbers = []
 
     def _extract_accession_numbers(self):
+        """Extract UniProt accession numbers from BLAST result file."""
         with open(self.blast_file_path, "r") as blast_file:
             for line in blast_file:
                 accession_number_match = re.match(r'Accession Number: (.+)', line)
@@ -231,6 +319,14 @@ class UniprotFetcher: # UniprotFetcher by both DAYE KWON and ANDY KECK
                         self.accession_numbers.append(accession_number)
 
     def fetch_uniprot_entries(self, nucleotide_accession):
+        """Fetch UniProt entries using nucleotide accession number.
+
+        Args:
+            nucleotide_accession (str): Nucleotide accession number.
+
+        Returns:
+            list: List of UniProt entries.
+        """
         url = f"https://rest.uniprot.org/uniprotkb/search?query={nucleotide_accession}&format=tsv"
         response = requests.get(url)
 
@@ -243,6 +339,14 @@ class UniprotFetcher: # UniprotFetcher by both DAYE KWON and ANDY KECK
             return None
 
     def fetch_and_write_uniprot_entries(self, output_file_path="uniprot_entry_codes.txt"):
+        """Fetch and write UniProt entries to a file.
+
+        Args:
+            output_file_path (str, optional): Path to write UniProt entries file. Defaults to "uniprot_entry_codes.txt".
+
+        Returns:
+            None
+        """
         self._extract_accession_numbers()
 
         all_uniprot_entries = set()  # Use a set to store unique entry codes
@@ -258,12 +362,24 @@ class UniprotFetcher: # UniprotFetcher by both DAYE KWON and ANDY KECK
                 f.write("UniProt Entry Code: " + entry_code + "\n")
         print("UniProt entry codes written to", output_file_path)
 
-class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
+class DeepGOPredictor: # done by DAYE KWON
+    """Class for predicting gene ontology (GO) functions using DeepGO."""
     def __init__(self):
+        """Initialize DeepGOPredictor object with API URL and headers."""
         self.url = 'https://deepgo.cbrc.kaust.edu.sa/deepgo/api/create'
         self.headers = {'Content-Type': 'application/json'}
 
     def predict_go_functions(self, sequence, accession_number, threshold=0.4):
+        """Predict GO functions using DeepGO.
+
+        Args:
+            sequence (str): Protein sequence in FASTA format.
+            accession_number (str): Accession number of the protein sequence.
+            threshold (float, optional): Threshold for filtering predictions. Defaults to 0.4.
+
+        Returns:
+            list: List of filtered GO function predictions.
+        """
         data = {
             "version": "1.0.18",
             "data_format": "fasta",  # must be small letters
@@ -284,7 +400,7 @@ class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
 
             # Write to file if there are filtered predictions
             if any(filtered_predictions):
-                with open('../deepgo_result.txt', 'a') as file:
+                with open('deepgo_result.txt', 'a') as file:
                     file.write(f"Accession Number: {accession_number}\n")
                     for category_name, functions in filtered_predictions:
                         if functions:
@@ -300,6 +416,14 @@ class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
             return None
 
     def main(self, sequences):
+        """Main function to predict GO functions for protein sequences and store results.
+
+        Args:
+            sequences (list): List of tuples containing accession numbers and protein sequences.
+
+        Returns:
+            None
+        """
         for accession_number, fasta_sequence in sequences:
             amino_acid_sequence = SOPMA().fasta_to_amino_acid(fasta_sequence)
             print("Accession Number:", accession_number)
@@ -313,6 +437,15 @@ class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
         print("Data written to deepgo_results table in database.")
 
     def write_to_database(self, accession_number, predictions):
+        """Write DeepGO predictions to a SQLite database.
+
+        Args:
+            accession_number (str): Accession number of the protein sequence.
+            predictions (list): List of GO function predictions.
+
+        Returns:
+            None
+        """
         if predictions is not None:  # Add a check for None
             conn = sqlite3.connect('outputs_data.db')
             cursor = conn.cursor()
@@ -322,13 +455,20 @@ class DeepGOPredictor: # DeepGOPredictor by DAYE KWON
                                    (accession_number, category_name, go_id, description, score))
             conn.commit()
             conn.close()
-class InterProDataLoader: # InterProDataLoader done by DAYE KWON
+class InterProDataLoader: # done by DAYE KWON
+    """Class for loading InterPro data and storing results."""
     def __init__(self, uniprot_file_path, database_file_path):
+        """Initialize InterProDataLoader object with UniProt file path and database file path."""
         self.uniprot_file_path = uniprot_file_path
         self.database_file_path = database_file_path
         self.api_url = "https://www.ebi.ac.uk/interpro/api"
 
     def get_accession_number_from_file(self):
+        """Get UniProt accession number from file.
+
+        Returns:
+            str: UniProt accession number.
+        """
         with open(self.uniprot_file_path, "r") as f:
             entry_code_line = f.readline().strip()
 
@@ -336,6 +476,14 @@ class InterProDataLoader: # InterProDataLoader done by DAYE KWON
         return entry_code
 
     def query_interpro_api(self, accession_number):
+        """Query InterPro API for protein data.
+
+        Args:
+            accession_number (str): UniProt accession number.
+
+        Returns:
+            list: List of InterPro data.
+        """
         url = f"{self.api_url}/entry/all/protein/UniProt/{accession_number}/?page_size=200&extra_fields=hierarchy,short_name"
 
         try:
@@ -347,6 +495,15 @@ class InterProDataLoader: # InterProDataLoader done by DAYE KWON
             return []
 
     def insert_into_database(self, table_name, data):
+        """Insert InterPro data into SQLite database.
+
+        Args:
+            table_name (str): Name of the table to insert data into.
+            data (list): List of InterPro data.
+
+        Returns:
+            None
+        """
         conn = sqlite3.connect(self.database_file_path)
         cursor = conn.cursor()
 
@@ -357,6 +514,14 @@ class InterProDataLoader: # InterProDataLoader done by DAYE KWON
         conn.close()
 
     def fetch_and_store_interpro_data(self, table_name):
+        """Fetch and store InterPro data in the database.
+
+        Args:
+            table_name (str): Name of the table to store data in.
+
+        Returns:
+            None
+        """
         accession_number = self.get_accession_number_from_file()
         interpro_data = self.query_interpro_api(accession_number)
 
@@ -395,11 +560,18 @@ class InterProDataLoader: # InterProDataLoader done by DAYE KWON
 
             self.insert_into_database(table_name, table_data)
             print("Data inserted into the output_data database successfully.")
-class PDB:
+class PDB: # done by MORGAN GYGER
+    """Class for fetching and parsing PDB data."""
     def __init__(self):
+        """Initialize PDB object."""
         pass
 
     def fetch_top_identifiers(self):
+        """Fetch top PDB identifiers from BLAST result file.
+
+        Returns:
+            list: List of top PDB identifiers.
+        """
         # Get fasta from blast results
         fasta_sequences = []
         try:
@@ -466,6 +638,14 @@ class PDB:
         return top_identifiers
 
     def fetch_pdb_content(self, pdb_id):
+        """Fetch PDB content for a given PDB ID.
+
+        Args:
+            pdb_id (str): PDB ID.
+
+        Returns:
+            str: PDB content.
+        """
         url = f'https://files.rcsb.org/download/{pdb_id}.pdb'
         try:
             response = requests.get(url)
@@ -476,6 +656,14 @@ class PDB:
             return None
 
     def parse_pdb_content(self, pdb_content):
+        """Parse PDB content and extract atom information.
+
+        Args:
+            pdb_content (str): PDB content.
+
+        Returns:
+            list: List of atom information.
+        """
         # Create file-like object from the PDB content string
         pdb_file = StringIO(pdb_content)
 
@@ -507,6 +695,15 @@ class PDB:
         return atoms
 
     def write_pdb(self, atoms, filename):
+        """Write PDB data to a file.
+
+        Args:
+            atoms (list): List of atom information.
+            filename (str): Name of the output file.
+
+        Returns:
+            None
+        """
         with open(filename, 'w') as f:
             for atom in atoms:
                 pdb_line = f"ATOM  {atom['serial']:>5} {atom['name']:<4} {atom['residue']:>3} {atom['chain']:1} \
@@ -515,7 +712,8 @@ class PDB:
 
 
 
-def main(): # main function compiled by ANDY KECK, MORGAN GYGER, DAYE KWON
+def main(): # done by MORGAN GYGER, DAYE KWON, and ANDY KECK
+    """Main function to execute the entire workflow."""
     conn = sqlite3.connect('outputs_data.db')
     cursor = conn.cursor()
 
@@ -579,7 +777,7 @@ def main(): # main function compiled by ANDY KECK, MORGAN GYGER, DAYE KWON
     uniprot_fetcher = UniprotFetcher("blast_result.txt")
     uniprot_fetcher.fetch_and_write_uniprot_entries()
 
-    loader = InterProDataLoader("../uniprot_entry_codes.txt", "outputs_data.db")
+    loader = InterProDataLoader("uniprot_entry_codes.txt", "outputs_data.db")
     loader.fetch_and_store_interpro_data("InterPro_Data")
 
     conn.close()
